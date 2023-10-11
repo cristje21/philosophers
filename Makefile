@@ -1,8 +1,11 @@
 SRC		=	main.c \
 			error.c \
-			atoi.c
-CFLAGS	=	-Wall -Werror -Wextra
-#CFLAGS	+=	-g -fsanitize=thread
+			utils.c \
+			init.c \
+			routine.c \
+			time.c
+CFLAGS	=	-Wall -Wextra -Werror
+CFLAGS	+=	 -g -fsanitize=address
 OBJ_F	=	$(SRC:%.c=obj/%.o)
 PHILO	=	philo
 BRed	=	\033[1;31m
@@ -25,6 +28,6 @@ clean :
 
 fclean : clean
 	@echo "${BRed}removed${R} executable"
-	@rm $(PHILO)
+	@rm -rf $(PHILO)
 
 re : fclean all
