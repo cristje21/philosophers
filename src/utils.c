@@ -13,6 +13,9 @@ bool	start_ok(t_philo *philo)
 		ret = true;
 	}
 	un_lock_mutex(philo->info->mutex + START, philo->info->mutex + END, 1);
+	if (!(philo->id % 2))
+		if (msleep(philo->info->arg[TTE] / 2, philo->info))
+			return (false);
 	return (ret);
 }
 

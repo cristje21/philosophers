@@ -47,11 +47,6 @@ static bool	think(t_philo *philo)
 {
 	if (print(philo->info, philo->id, "is thinking"))
 		return (true);
-	if (!(philo->id % 2) && !philo->nom)
-	{
-		if (msleep(1, philo->info))
-			return (true);
-	}
 	return (false);
 }
 

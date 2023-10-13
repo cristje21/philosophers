@@ -10,12 +10,17 @@ t_philo	*initialize_individual(t_inf *info, int i)
 	new->nom = 0;
 	new->info = info;
 	new->id = i + 1;
-	new->right = info->forks + i;
 	new->last_meal = 0;
-	if (i == 0)
-		new->left = info->forks + (info->arg[NOP] - 1);
+	if (!i)
+	{
+		new->right = info->forks + (info->arg[NOP] - 1);
+		new->left = info->forks + i;
+	}
 	else
-		new->left = info->forks + (i - 1);
+	{
+		new->left = info->forks + i - 1;
+		new->right = info->forks + i;
+	}
 	return (new);
 }
 
@@ -30,7 +35,11 @@ bool	init_arg(t_inf *info, char **argv)
 	info->arg[TTS] = ft_atoi(argv[4]);
 	info->arg[NOM] = -1;
 	if (argv[5])
-		info->arg[NOM] = ft_atoi(argv[5]); //  this can also fail
+	{
+		info->arg[NOM] = ft_atoi(argv[5]);
+		if (info->arg[NOM] == -1)
+			return (free(info->arg), true);
+	}
 	if (info->arg[NOP] < 0 || info->arg[TTD] < 0 ||\
 		info->arg[TTE] < 0 || info->arg[TTS] < 0)
 		return (free(info->arg), true);

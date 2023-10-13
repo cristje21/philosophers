@@ -1,11 +1,6 @@
-SRC		=	main.c \
-			error.c \
-			utils.c \
-			init.c \
-			routine.c \
-			time.c
+SRC		=	main.c error.c utils.c init.c routine.c time.c
 CFLAGS	=	-Wall -Wextra -Werror
-CFLAGS	+=	 -g -fsanitize=address
+# CFLAGS	+=	-g -fsanitize=thread
 OBJ_F	=	$(SRC:%.c=obj/%.o)
 PHILO	=	philo
 BRed	=	\033[1;31m

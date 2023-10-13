@@ -101,5 +101,6 @@ int	main(int argc, char *argv[])
 		ret++;
 	if (join_philosophers(&info, i))
 		ret++;
-	return (free_info(&info), 0);
+	free_info(&info);
+	return (ret);
 }

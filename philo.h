@@ -21,12 +21,6 @@ enum	e_arg
 	NOM,
 };
 
-enum	e_time
-{
-	MS,
-	US,
-};
-
 enum	e_mutex
 {
 	END,
