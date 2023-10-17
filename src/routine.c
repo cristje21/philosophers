@@ -7,11 +7,12 @@ static bool	nom_achieved(t_philo *p, t_inf *info, int nom)
 	p->nom++;
 	if (p->nom == nom)
 	{
-		un_lock_mutex(info->mutex + MNOM, info->mutex + END, 0);
+		p->nom = 0;
+		un_lock_mutex(info->mutex + MEALS, info->mutex + END, 0);
 		info->nom++;
 		if (info->nom == info->arg[NOP])
 			info->end_of_simulation = true;
-		un_lock_mutex(info->mutex + MNOM, info->mutex + END, 1);
+		un_lock_mutex(info->mutex + END, info->mutex + MEALS, 1);
 		return (true);
 	}
 	return (false);
@@ -19,31 +20,31 @@ static bool	nom_achieved(t_philo *p, t_inf *info, int nom)
 
 static bool	eat(t_philo *p)
 {
-	pthread_mutex_lock(p->left);
-	if (print(p->info, p->id, "has taken a fork") || p->left == p->right)
-		return (un_lock_mutex(p->left, NULL, 1), true);
 	pthread_mutex_lock(p->right);
+	if (print(p->info, p->id, "has taken a fork") || p->left == p->right)
+		return (un_lock_mutex(p->right, NULL, 1), true);
+	pthread_mutex_lock(p->left);
 	if (print(p->info, p->id, "has taken a fork") ||\
 		print(p->info, p->id, "is eating"))
-		return (un_lock_mutex(p->left, p->right, 1), true);
-	pthread_mutex_lock(p->info->last_meal + (p->id - 1));
+		return (un_lock_mutex(p->right, p->left, 1), true);
+	pthread_mutex_lock(p->info->mutex + MEALS);
 	p->last_meal = gettime();
-	pthread_mutex_unlock(p->info->last_meal + (p->id - 1));
+	pthread_mutex_unlock(p->info->mutex + MEALS);
 	if (nom_achieved(p, p->info, p->info->arg[NOM]) || eos(p->info) ||\
 		msleep(p->info->arg[TTE], p->info))
-		return (un_lock_mutex(p->left, p->right, 1), true);
-	return (un_lock_mutex(p->left, p->right, 1), false);
+		return (un_lock_mutex(p->right, p->left, 1), true);
+	return (un_lock_mutex(p->right, p->left, 1), false);
 }
 
 static bool	p_sleep(t_philo *philo)
 {
-	if (print(philo->info, philo->id, "is sleeping") ||\
+	if (print(philo->info, philo->id, "is sleeping") || eos(philo->info) ||\
 		msleep(philo->info->arg[TTS], philo->info))
 		return (true);
 	return (false);
 }
 
-static bool	think(t_philo *philo)
+bool	think(t_philo *philo)
 {
 	if (print(philo->info, philo->id, "is thinking"))
 		return (true);
@@ -56,11 +57,11 @@ void	*routine(void *philo)
 		return (NULL);
 	while (1)
 	{
-		if (think(philo))
-			break ;
 		if (eat(philo))
 			break ;
 		if (p_sleep(philo))
+			break ;
+		if (think(philo))
 			break ;
 	}
 	return (NULL);

@@ -27,7 +27,6 @@ void	free_info(t_inf *info)
 {
 	free_philo(info->philosophers, info->arg[NOP]);
 	destroy_mutexes(info->forks, info->arg[NOP]);
-	destroy_mutexes(info->last_meal, info->arg[NOP]);
 	destroy_mutexes(info->mutex, MUTEXES);
 	free(info->th);
 	free(info->arg);

@@ -38,19 +38,21 @@ static void	monitoring(t_inf *info, t_philo **philosophers)
 		i = 0;
 		while (i < info->arg[NOP])
 		{
-			pthread_mutex_lock(info->mutex + END);
-			if (info->end_of_simulation)
-				return (un_lock_mutex(info->mutex + END, NULL, 1));
-			pthread_mutex_lock(info->last_meal + i);
+			if (eos(info))
+				return ;
+			pthread_mutex_lock(info->mutex + MEALS);
 			if (info->sos && philosophers[i]->last_meal && \
 				gettime() - philosophers[i]->last_meal \
-				>= (unsigned long)info->arg[TTD])
+				>= ((unsigned long)info->arg[TTD]))
 			{
+				pthread_mutex_unlock(info->mutex + MEALS);
+				pthread_mutex_lock(info->mutex + END);
 				printf("%lu %d died\n", gettime() - info->sos, i + 1);
 				info->end_of_simulation = true;
-				return (un_lock_mutex(info->last_meal + i, info->mutex + END, 1));
+				pthread_mutex_unlock(info->mutex + END);
+				return ;
 			}
-			un_lock_mutex(info->last_meal + i, info->mutex + END, 1);
+			pthread_mutex_unlock(info->mutex + MEALS);
 			i++;
 		}
 	}

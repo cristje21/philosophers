@@ -5,6 +5,7 @@
 # include <sys/time.h>
 # include <stdbool.h>
 # include <sys/types.h>
+# include <limits.h>
 
 # include <unistd.h>
 # include <stdlib.h>
@@ -24,7 +25,7 @@ enum	e_arg
 enum	e_mutex
 {
 	END,
-	MNOM,
+	MEALS,
 	START,
 	MUTEXES,
 };
@@ -33,7 +34,7 @@ typedef struct		s_inf
 {
 	pthread_t		*th;
 	pthread_mutex_t	*forks;
-	pthread_mutex_t	*last_meal;
+	// pthread_mutex_t	*start;
 	pthread_mutex_t	*mutex;
 	t_philo			**philosophers;
 	unsigned long	sos;
@@ -41,6 +42,7 @@ typedef struct		s_inf
 	bool			start_ok;
 	int				nom;
 	int				*arg;
+	int				priority;
 }					t_inf;
 
 typedef struct		s_philo
@@ -60,7 +62,7 @@ void			free_philo(t_philo **philosophers, int amount);
 bool			eos(t_inf *info);
 
 int				ft_atoi(char *s);
-bool			start_ok(t_philo *philo);
+bool			start_ok(t_philo *p);
 void			un_lock_mutex(pthread_mutex_t *l1, pthread_mutex_t *l2, bool action);
 bool			print(t_inf *info, int id, char *action);
 
@@ -70,6 +72,7 @@ bool			initialize_info(t_inf *info, char **argv);
 pthread_mutex_t	*create_mutexes(int amount);
 
 void			*routine(void *philo);
+bool			think(t_philo *philo);
 
 unsigned long	gettime(void);
 bool			msleep(unsigned long u_seconds, t_inf *info);

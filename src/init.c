@@ -13,13 +13,13 @@ t_philo	*initialize_individual(t_inf *info, int i)
 	new->last_meal = 0;
 	if (!i)
 	{
-		new->right = info->forks + (info->arg[NOP] - 1);
-		new->left = info->forks + i;
+		new->right = info->forks + i;
+		new->left = info->forks + (info->arg[NOP] - 1);
 	}
 	else
 	{
-		new->left = info->forks + i - 1;
-		new->right = info->forks + i;
+		new->right = info->forks + (i - 1);
+		new->left = info->forks + i;
 	}
 	return (new);
 }
@@ -37,11 +37,11 @@ bool	init_arg(t_inf *info, char **argv)
 	if (argv[5])
 	{
 		info->arg[NOM] = ft_atoi(argv[5]);
-		if (info->arg[NOM] == -1)
+		if (info->arg[NOM] <= 0)
 			return (free(info->arg), true);
 	}
-	if (info->arg[NOP] < 0 || info->arg[TTD] < 0 ||\
-		info->arg[TTE] < 0 || info->arg[TTS] < 0)
+	if (info->arg[NOP] <= 0 || info->arg[TTD] <= 0 ||\
+		info->arg[TTE] <= 0 || info->arg[TTS] <= 0)
 		return (free(info->arg), true);
 	return (false);
 }
@@ -71,7 +71,6 @@ bool	initialize_info(t_inf *info, char **argv)
 {
 	info->th = NULL;
 	info->forks = NULL;
-	info->last_meal = NULL;
 	info->mutex = NULL;
 	info->philosophers = NULL;
 	info->sos = 0;
@@ -80,12 +79,13 @@ bool	initialize_info(t_inf *info, char **argv)
 	info->start_ok = true;
 	if (init_arg(info, argv))
 		return (true);
+	info->priority = info->arg[NOP];
 	info->forks = create_mutexes(info->arg[NOP]);
 	if (!info->forks)
 		return (free_info(info), true);
-	info->last_meal = create_mutexes(info->arg[NOP]);
-	if (!info->last_meal)
-		return (free_info(info), true);
+	// info->start = create_mutexes(info->arg[NOP]);
+	// if (!info->start)
+	// 	return (free_info(info), true);
 	info->mutex = create_mutexes(MUTEXES);
 	if (!info->mutex)
 		return (free_info(info), true);

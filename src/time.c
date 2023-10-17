@@ -16,8 +16,7 @@ bool	msleep(unsigned long mseconds, t_inf *info)
 	time = gettime();
 	while (gettime() - time < mseconds)
 	{
-		if (usleep(mseconds / 10))
-			return (error("usleep()"), true);
+		usleep(mseconds / 10);
 		if (eos(info))
 			break ;
 	}

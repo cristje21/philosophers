@@ -1,21 +1,20 @@
 #include "../philo.h"
 
-bool	start_ok(t_philo *philo)
+bool	start_ok(t_philo *p)
 {
 	bool	ret;
 
-	un_lock_mutex(philo->info->mutex + START, philo->info->mutex + END, 0);
-	if (philo->info->start_ok != true)
+	pthread_mutex_lock(p->info->mutex + START);
+	pthread_mutex_unlock(p->info->mutex + START);
+	if (p->info->start_ok != true)
 		ret = false;
 	else
 	{
-		philo->last_meal = philo->info->sos;
+		pthread_mutex_lock(p->info->mutex + MEALS);
+		p->last_meal = p->info->sos;
+		pthread_mutex_unlock(p->info->mutex + MEALS);
 		ret = true;
 	}
-	un_lock_mutex(philo->info->mutex + START, philo->info->mutex + END, 1);
-	if (!(philo->id % 2))
-		if (msleep(philo->info->arg[TTE] / 2, philo->info))
-			return (false);
 	return (ret);
 }
 
