@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cvan-sch <cvan-sch@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/10/30 14:25:17 by cvan-sch          #+#    #+#             */
+/*   Updated: 2023/10/30 14:28:13 by cvan-sch         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../philo.h"
 
 bool	start_ok(t_philo *p)
@@ -34,7 +46,8 @@ static bool	check_validity(char *s)
 		if (s[i] < '0' || s[i] > '9')
 			return (error("some characters are not numbers"), false);
 		else if (i > 9 + preceding_zeros)
-			return (error("one or more arguments are bigger than an integer"), false);
+			return (error("one or more arguments are bigger than an integer") \
+			, false);
 		i++;
 	}
 	return (true);

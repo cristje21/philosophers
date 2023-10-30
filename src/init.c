@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cvan-sch <cvan-sch@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/10/30 14:25:05 by cvan-sch          #+#    #+#             */
+/*   Updated: 2023/10/30 14:26:58 by cvan-sch         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../philo.h"
 
 t_philo	*initialize_individual(t_inf *info, int i)
@@ -40,7 +52,7 @@ bool	init_arg(t_inf *info, char **argv)
 		if (info->arg[NOM] <= 0)
 			return (free(info->arg), true);
 	}
-	if (info->arg[NOP] <= 0 || info->arg[TTD] <= 0 ||\
+	if (info->arg[NOP] <= 0 || info->arg[TTD] <= 0 || \
 		info->arg[TTE] <= 0 || info->arg[TTS] <= 0)
 		return (free(info->arg), true);
 	return (false);
@@ -83,9 +95,6 @@ bool	initialize_info(t_inf *info, char **argv)
 	info->forks = create_mutexes(info->arg[NOP]);
 	if (!info->forks)
 		return (free_info(info), true);
-	// info->start = create_mutexes(info->arg[NOP]);
-	// if (!info->start)
-	// 	return (free_info(info), true);
 	info->mutex = create_mutexes(MUTEXES);
 	if (!info->mutex)
 		return (free_info(info), true);

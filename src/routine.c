@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   routine.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cvan-sch <cvan-sch@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/10/30 14:25:11 by cvan-sch          #+#    #+#             */
+/*   Updated: 2023/10/30 14:27:40 by cvan-sch         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../philo.h"
 
 static bool	nom_achieved(t_philo *p, t_inf *info, int nom)
@@ -24,13 +36,13 @@ static bool	eat(t_philo *p)
 	if (print(p->info, p->id, "has taken a fork") || p->left == p->right)
 		return (un_lock_mutex(p->right, NULL, 1), true);
 	pthread_mutex_lock(p->left);
-	if (print(p->info, p->id, "has taken a fork") ||\
+	if (print(p->info, p->id, "has taken a fork") || \
 		print(p->info, p->id, "is eating"))
 		return (un_lock_mutex(p->right, p->left, 1), true);
 	pthread_mutex_lock(p->info->mutex + MEALS);
 	p->last_meal = gettime();
 	pthread_mutex_unlock(p->info->mutex + MEALS);
-	if (nom_achieved(p, p->info, p->info->arg[NOM]) || eos(p->info) ||\
+	if (nom_achieved(p, p->info, p->info->arg[NOM]) || eos(p->info) || \
 		msleep(p->info->arg[TTE], p->info))
 		return (un_lock_mutex(p->right, p->left, 1), true);
 	return (un_lock_mutex(p->right, p->left, 1), false);
@@ -38,7 +50,7 @@ static bool	eat(t_philo *p)
 
 static bool	p_sleep(t_philo *philo)
 {
-	if (print(philo->info, philo->id, "is sleeping") || eos(philo->info) ||\
+	if (print(philo->info, philo->id, "is sleeping") || eos(philo->info) || \
 		msleep(philo->info->arg[TTS], philo->info))
 		return (true);
 	return (false);

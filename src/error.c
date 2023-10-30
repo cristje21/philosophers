@@ -1,4 +1,16 @@
-#include	"../philo.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   error.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cvan-sch <cvan-sch@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/10/30 14:24:55 by cvan-sch          #+#    #+#             */
+/*   Updated: 2023/10/30 14:26:20 by cvan-sch         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../philo.h"
 
 void	destroy_mutexes(pthread_mutex_t *arr, int amount)
 {
@@ -54,5 +66,4 @@ bool	eos(t_inf *info)
 		end = true;
 	pthread_mutex_unlock(info->mutex + END);
 	return (end);
-
 }
