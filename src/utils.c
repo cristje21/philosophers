@@ -16,16 +16,19 @@ bool	start_ok(t_philo *p)
 {
 	bool	ret;
 
-	pthread_mutex_lock(p->info->mutex + START);
-	pthread_mutex_unlock(p->info->mutex + START);
+	pthread_mutex_lock(p->info->mutex + MEALS);
 	if (p->info->start_ok != true)
 		ret = false;
 	else
 	{
-		pthread_mutex_lock(p->info->mutex + MEALS);
 		p->last_meal = p->info->sos;
-		pthread_mutex_unlock(p->info->mutex + MEALS);
 		ret = true;
+	}
+	pthread_mutex_unlock(p->info->mutex + MEALS);
+	if (!(p->id % 2))
+	{
+		think(p);
+		msleep(p->info->arg[TTE] / 2, p->info);
 	}
 	return (ret);
 }

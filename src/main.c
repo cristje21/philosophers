@@ -65,6 +65,7 @@ static void	monitoring(t_inf *info, t_philo **philosophers)
 				return ;
 			}
 			pthread_mutex_unlock(info->mutex + MEALS);
+			usleep(100);
 			i++;
 		}
 	}
@@ -78,7 +79,7 @@ static int	let_there_be_philosophers(t_inf *info)
 	info->philosophers = malloc(info->arg[NOP] * sizeof(t_philo *));
 	if (!info->philosophers)
 		return (true);
-	pthread_mutex_lock(info->mutex + START);
+	pthread_mutex_lock(info->mutex + MEALS);
 	while (i < info->arg[NOP])
 	{
 		info->philosophers[i] = initialize_individual(info, i);
@@ -93,7 +94,7 @@ static int	let_there_be_philosophers(t_inf *info)
 		i++;
 	}
 	i = dinner_time(info, i);
-	pthread_mutex_unlock(info->mutex + START);
+	pthread_mutex_unlock(info->mutex + MEALS);
 	return (i);
 }
 

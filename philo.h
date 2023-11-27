@@ -26,7 +26,6 @@ enum	e_mutex
 {
 	END,
 	MEALS,
-	START,
 	MUTEXES,
 };
 
@@ -34,7 +33,6 @@ typedef struct		s_inf
 {
 	pthread_t		*th;
 	pthread_mutex_t	*forks;
-	// pthread_mutex_t	*start;
 	pthread_mutex_t	*mutex;
 	t_philo			**philosophers;
 	unsigned long	sos;
@@ -42,7 +40,6 @@ typedef struct		s_inf
 	bool			start_ok;
 	int				nom;
 	int				*arg;
-	int				priority;
 }					t_inf;
 
 typedef struct		s_philo

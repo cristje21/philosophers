@@ -1,6 +1,7 @@
 SRC		=	main.c error.c utils.c init.c routine.c time.c
 CFLAGS	=	-Wall -Wextra -Werror
-CFLAGS	+=	-fsanitize=thread -g
+# CFLAGS	+=	-fsanitize=thread -g
+
 OBJ_F	=	$(SRC:%.c=obj/%.o)
 PHILO	=	philo
 BRed	=	\033[1;31m

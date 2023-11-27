@@ -25,13 +25,15 @@ t_philo	*initialize_individual(t_inf *info, int i)
 	new->last_meal = 0;
 	if (!i)
 	{
-		new->right = info->forks + i;
-		new->left = info->forks + (info->arg[NOP] - 1);
+		// new->right = info->forks + i;
+		// new->left =  info->forks + (info->arg[NOP] - 1);
+		new->left = info->forks + i;
+		new->right =  info->forks + (info->arg[NOP] - 1);
 	}
 	else
 	{
-		new->right = info->forks + (i - 1);
-		new->left = info->forks + i;
+		new->left = info->forks + (i - 1);
+		new->right = info->forks + i;
 	}
 	return (new);
 }
@@ -91,7 +93,6 @@ bool	initialize_info(t_inf *info, char **argv)
 	info->start_ok = true;
 	if (init_arg(info, argv))
 		return (true);
-	info->priority = info->arg[NOP];
 	info->forks = create_mutexes(info->arg[NOP]);
 	if (!info->forks)
 		return (free_info(info), true);

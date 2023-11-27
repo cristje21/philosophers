@@ -20,37 +20,56 @@ static bool	nom_achieved(t_philo *p, t_inf *info, int nom)
 	if (p->nom == nom)
 	{
 		p->nom = 0;
-		un_lock_mutex(info->mutex + MEALS, info->mutex + END, 0);
+		pthread_mutex_lock(info->mutex + MEALS);
+		pthread_mutex_lock(info->mutex + END);
 		info->nom++;
 		if (info->nom == info->arg[NOP])
 			info->end_of_simulation = true;
-		un_lock_mutex(info->mutex + END, info->mutex + MEALS, 1);
+		pthread_mutex_unlock(info->mutex + END);
+		pthread_mutex_unlock(info->mutex + MEALS);
 		return (true);
 	}
 	return (false);
 }
 
+int	take_fork(pthread_mutex_t *fork, int id, t_inf *info)
+{
+	pthread_mutex_lock(fork);
+	return (print(info, id, "has taken a fork"));
+}
+
 static bool	eat(t_philo *p)
 {
-	pthread_mutex_lock(p->right);
-	if (print(p->info, p->id, "has taken a fork") || p->left == p->right)
-		return (un_lock_mutex(p->right, NULL, 1), true);
-	pthread_mutex_lock(p->left);
-	if (print(p->info, p->id, "has taken a fork") || \
-		print(p->info, p->id, "is eating"))
-		return (un_lock_mutex(p->right, p->left, 1), true);
-	pthread_mutex_lock(p->info->mutex + MEALS);
-	p->last_meal = gettime();
-	pthread_mutex_unlock(p->info->mutex + MEALS);
-	if (nom_achieved(p, p->info, p->info->arg[NOM]) || eos(p->info) || \
-		msleep(p->info->arg[TTE], p->info))
-		return (un_lock_mutex(p->right, p->left, 1), true);
-	return (un_lock_mutex(p->right, p->left, 1), false);
+	bool ret;
+
+	ret = false;
+	if (p->right == p->left)
+		return (true);
+	if (take_fork(p->right, p->id, p->info))
+	{
+		pthread_mutex_unlock(p->right);
+		return (true);
+	}
+	if (take_fork(p->left, p->id, p->info))
+		ret = true;
+	if (!print(p->info, p->id, "is eating"))
+	{
+		pthread_mutex_lock(p->info->mutex + MEALS);
+		p->last_meal = gettime();
+		pthread_mutex_unlock(p->info->mutex + MEALS);
+		if (nom_achieved(p, p->info, p->info->arg[NOM]) || \
+			eos(p->info) || \
+			msleep(p->info->arg[TTE], p->info))
+			ret = true;
+	}
+	pthread_mutex_unlock(p->right);
+	pthread_mutex_unlock(p->left);
+	return (ret);
 }
 
 static bool	p_sleep(t_philo *philo)
 {
-	if (print(philo->info, philo->id, "is sleeping") || eos(philo->info) || \
+	if (print(philo->info, philo->id, "is sleeping") || \
 		msleep(philo->info->arg[TTS], philo->info))
 		return (true);
 	return (false);
@@ -58,9 +77,7 @@ static bool	p_sleep(t_philo *philo)
 
 bool	think(t_philo *philo)
 {
-	if (print(philo->info, philo->id, "is thinking"))
-		return (true);
-	return (false);
+	return (print(philo->info, philo->id, "is thinking"));
 }
 
 void	*routine(void *philo)
